@@ -1,13 +1,16 @@
 package com.enr.carfueltracker.jpa.entity;
 
+import com.enr.carfueltracker.dto.FuelDto;
 import jakarta.persistence.*;
+import lombok.Builder;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
 @Table(name = "fuel")
-public class Fuel {
+@Builder
+public class FuelEntity {
 
     @Id
     @GeneratedValue
@@ -22,23 +25,36 @@ public class Fuel {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "distance_unit_id", referencedColumnName = "id")
-    private DistanceUnit distanceUnit;
+    private DistanceUnitEntity distanceUnit;
 
     @Column(name = "price")
     private Double price;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "currency_id", referencedColumnName = "id")
-    private Currency currency;
+    private CurrencyEntity currency;
 
     @Column(name = "volume")
     private Double volume;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "volume_unit_id", referencedColumnName = "id")
-    private VolumeUnit volumeUnit;
+    private VolumeUnitEntity volumeUnit;
 
     @ManyToOne
     @JoinColumn(name = "car_id", nullable = false)
-    private Car car;
+    private CarEntity car;
+
+    public FuelDto toDto() {
+        return FuelDto.builder()
+                .carId(car.getId().toString())
+                .createdAt(createdAt)
+                .distance(distance)
+                .distanceId(distanceUnit.getId())
+                .price(price)
+                .currencyId(currency.getId())
+                .volume(volume)
+                .volumeId(volumeUnit.getId())
+                .build();
+    }
 }

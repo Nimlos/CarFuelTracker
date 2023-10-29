@@ -1,7 +1,7 @@
 package com.enr.carfueltracker.jpa.repository;
 
-import com.enr.carfueltracker.jpa.entity.DistanceUnit;
+import com.enr.carfueltracker.jpa.entity.DistanceUnitEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DistanceUnitRepository extends JpaRepository<DistanceUnit, Integer> {
+public interface DistanceUnitRepository extends JpaRepository<DistanceUnitEntity, Integer> {
 }
