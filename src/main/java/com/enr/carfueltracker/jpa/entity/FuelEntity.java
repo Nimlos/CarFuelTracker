@@ -2,7 +2,9 @@ package com.enr.carfueltracker.jpa.entity;
 
 import com.enr.carfueltracker.dto.FuelDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -10,6 +12,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "fuel")
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FuelEntity {
 
     @Id

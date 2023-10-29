@@ -1,6 +1,8 @@
 package com.enr.carfueltracker.services;
 
 import com.enr.carfueltracker.dto.CurrencyDto;
+import com.enr.carfueltracker.exceptions.NoCurrencyFoundException;
+import com.enr.carfueltracker.jpa.entity.CurrencyEntity;
 import com.enr.carfueltracker.jpa.repository.CurrencyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,5 +23,9 @@ public class CurrencyService {
         });
 
         return currencyDtos;
+    }
+
+    public CurrencyEntity getCurrencyFromId(Integer id) throws NoCurrencyFoundException {
+        return currencyRepository.findById(id).orElseThrow(() -> new NoCurrencyFoundException(Integer.toString(id)));
     }
 }

@@ -35,7 +35,10 @@ public class CarService {
     }
 
     public CarDto getCar(UUID id) throws NoCarFoundException {
-        CarEntity car = carRepository.findById(id).orElseThrow(() -> new NoCarFoundException("Cannot find car with id: " + id));
-        return car.toCarDto();
+        return getCarEntity(id).toCarDto();
+    }
+
+    public CarEntity getCarEntity(UUID id) throws NoCarFoundException {
+        return carRepository.findById(id).orElseThrow(() -> new NoCarFoundException("Cannot find car with id: " + id));
     }
 }

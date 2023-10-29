@@ -2,8 +2,10 @@ package com.enr.carfueltracker.services;
 
 import com.enr.carfueltracker.dto.FuelDto;
 import com.enr.carfueltracker.exceptions.NoCarFoundException;
-import com.enr.carfueltracker.jpa.entity.CarEntity;
-import com.enr.carfueltracker.jpa.entity.FuelEntity;
+import com.enr.carfueltracker.exceptions.NoCurrencyFoundException;
+import com.enr.carfueltracker.exceptions.NoDistanceUnitFoundException;
+import com.enr.carfueltracker.exceptions.NoVolumeUnitFoundException;
+import com.enr.carfueltracker.jpa.entity.*;
 import com.enr.carfueltracker.jpa.repository.CarRepository;
 import com.enr.carfueltracker.jpa.repository.FuelRepository;
 import jakarta.transaction.Transactional;
@@ -22,6 +24,10 @@ public class FuelService {
 
     private final FuelRepository fuelRepository;
     private final CarRepository carRepository;
+    private final CarService carService;
+    private final VolumeUnitService volumeUnitService;
+    private final CurrencyService currencyService;
+    private final DistanceUnitService distanceUnitService;
 
     public List<FuelDto> getAllFuelForCar(UUID carId) throws NoCarFoundException {
         ArrayList<FuelDto> fuelDtos = new ArrayList<>();
@@ -44,7 +50,24 @@ public class FuelService {
         return fuelDtos;
     }
 
-//    public boolean addFuelToCar(FuelDto fuelDto) {
-//
-//    }
+    public boolean addFuelToCar(FuelDto fuelDto) throws NoCarFoundException, NoCurrencyFoundException, NoVolumeUnitFoundException, NoDistanceUnitFoundException {
+        CarEntity car = carService.getCarEntity(UUID.fromString(fuelDto.getCarId()));
+        VolumeUnitEntity volumeUnit = volumeUnitService.getVolumeUnitFromId(fuelDto.getVolumeId());
+        DistanceUnitEntity distanceUnitEntity = distanceUnitService.getDistanceUnitFromId(fuelDto.getDistanceId());
+        CurrencyEntity currencyEntity = currencyService.getCurrencyFromId(fuelDto.getCurrencyId());
+
+        FuelEntity fuelEntity = FuelEntity.builder()
+                .car(car)
+                .price(fuelDto.getPrice())
+                .createdAt(fuelDto.getCreatedAt())
+                .currency(currencyEntity)
+                .distance(fuelDto.getDistance())
+                .distanceUnit(distanceUnitEntity)
+                .volume(fuelDto.getVolume())
+                .volumeUnit(volumeUnit)
+                .build();
+
+        fuelRepository.save(fuelEntity);
+        return true;
+    }
 }
